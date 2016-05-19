@@ -1,4 +1,4 @@
 # WebGL Water Demo
-Demo/experiment heavily influenced by code from:
+Demo/experiment heavily based on code by:
 http://madebyevan.com/webgl-water/
 
