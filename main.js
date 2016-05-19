@@ -30,9 +30,9 @@ var cubemap;
 var renderer;
 var angleX = -25;
 var angleY = -200.5;
-
+var fov = 25;
 // Sphere physics info
-var useSpherePhysics = false;
+var useSpherePhysics = true;
 var center;
 var oldCenter;
 var velocity;
@@ -45,7 +45,7 @@ window.onload = function() {
   var help = document.getElementById('help');
 
   function onresize() {
-    var width = innerWidth - help.clientWidth - 20;
+    var width = innerWidth;
     var height = innerHeight;
     gl.canvas.width = width * ratio;
     gl.canvas.height = height * ratio;
@@ -54,7 +54,7 @@ window.onload = function() {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.matrixMode(gl.PROJECTION);
     gl.loadIdentity();
-    gl.perspective(45, gl.canvas.width / gl.canvas.height, 0.01, 100);
+    gl.perspective(fov, gl.canvas.width / gl.canvas.height, 0.01, 100);
     gl.matrixMode(gl.MODELVIEW);
     draw();
   }
@@ -80,8 +80,11 @@ window.onload = function() {
   center = oldCenter = new GL.Vector(-0.4, -0.75, 0.2);
   velocity = new GL.Vector();
   gravity = new GL.Vector(0, -4, 0);
-  radius = 0.25;
-
+  radius = 0.45;
+  var sphereRadSlider= document.getElementById('sphere-rad');
+  sphereRadSlider.addEventListener('change', function(){
+    radius = sphereRadSlider.value * 0.01;
+  });
   for (var i = 0; i < 20; i++) {
     water.addDrop(Math.random() * 2 - 1, Math.random() * 2 - 1, 0.03, (i & 1) ? 0.01 : -0.01);
   }
@@ -133,6 +136,7 @@ window.onload = function() {
       duringDrag(x, y);
     } else {
       mode = MODE_ORBIT_CAMERA;
+      duringDrag(x,y);
     }
   }
 
@@ -221,7 +225,6 @@ window.onload = function() {
     else if (e.which == 'G'.charCodeAt(0)) useSpherePhysics = !useSpherePhysics;
     else if (e.which == 'L'.charCodeAt(0) && paused) draw();
   };
-
   var frame = 0;
 
   function update(seconds) {
@@ -273,7 +276,7 @@ window.onload = function() {
     gl.enable(gl.DEPTH_TEST);
     renderer.sphereCenter = center;
     renderer.sphereRadius = radius;
-    renderer.renderCube();
+    //renderer.renderCube();
     renderer.renderWater(water, cubemap);
     renderer.renderSphere();
     gl.disable(gl.DEPTH_TEST);
