@@ -39,11 +39,10 @@ var velocity;
 var gravity;
 var radius;
 var paused = false;
-
+var gui;
 window.onload = function() {
   var ratio = window.devicePixelRatio || 1;
   var help = document.getElementById('help');
-
   function onresize() {
     var width = innerWidth;
     var height = innerHeight;
@@ -81,10 +80,7 @@ window.onload = function() {
   velocity = new GL.Vector();
   gravity = new GL.Vector(0, -4, 0);
   radius = 0.45;
-  var sphereRadSlider= document.getElementById('sphere-rad');
-  sphereRadSlider.addEventListener('change', function(){
-    radius = sphereRadSlider.value * 0.01;
-  });
+
   for (var i = 0; i < 20; i++) {
     water.addDrop(Math.random() * 2 - 1, Math.random() * 2 - 1, 0.03, (i & 1) ? 0.01 : -0.01);
   }
@@ -281,4 +277,9 @@ window.onload = function() {
     renderer.renderSphere();
     gl.disable(gl.DEPTH_TEST);
   }
+  gui = new dat.GUI(); //our gui
+  var radController = gui.add(renderer, 'sphereRadius', 0.01,1.0);
+  radController.onChange(function(value){
+    radius = value;
+  });
 };
